@@ -1,5 +1,6 @@
 var arrayTab = new Array();
 var idUnique = 0;
+var idSearch = 0;
 var trieAnnee = 0;
 var trieTitre = 0;
 var variableAddFilm = 0;
@@ -102,7 +103,7 @@ function addFilm(titre) {
 function saveFilm(film) {
     idUnique++;
     arrayTab.push({ id: idUnique, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview });
-    creerOneCard(arrayTab[arrayTab.length-1]);
+    creerOneCard(arrayTab[arrayTab.length - 1]);
 }
 /**Creer un formulaire d'ajout d'un film */
 function createFormAddFilm() {
@@ -121,12 +122,12 @@ function createFormAddFilm() {
 
         var btnAdd = document.createElement("button");
         btnAdd.className = "ui blue big button";
-        btnAdd.innerText = "Ajouter";
+        btnAdd.innerText = "Rechercher";
         btnAdd.addEventListener('click', function () {
             if (input.value.length > 1) {
-                addFilm(input.value);
-                alert("Film ajoutée avec success");
-                dropFormAddFilm();
+                btnFilmSearch(input.value);
+                //alert("Film ajoutée avec success");
+                //dropFormAddFilm();
             } else {
                 alert("Un titre doit au moins avoir 2 lettres");
             }
@@ -135,8 +136,10 @@ function createFormAddFilm() {
         var btnAnnuler = document.createElement("button");
         btnAnnuler.className = "ui grey big button";
         btnAnnuler.innerText = "Annuler";
-        btnAnnuler.addEventListener('click', dropFormAddFilm);
-
+        btnAnnuler.addEventListener('click', function () {
+            dropFormAddFilm();
+            afficheAll();
+        });
         main.appendChild(divInput);
         divInput.appendChild(input);
         divInput.appendChild(btnAdd);
@@ -325,4 +328,93 @@ function supprimerFleche() {
     if (document.getElementById("caret")) {
         document.getElementById("caret").remove();
     }
+}
+function rechercherFilm() {
+    createFormAddFilm();
+    dropAll();
+    supprimerFleche();
+}
+function btnFilmSearch(titre) {
+    callAPIsearch(titre, listSearch);
+}
+function listSearch(rep) {
+    let i = 0;
+    while (i < rep.results.length) {
+        idSearch++;
+        film = rep.results[i];
+        objetSearch = { id: idSearch, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview }
+        creerOneCardForAdd(objetSearch, film);
+        i++;
+    }
+}
+/** Permet de récupérer les informations d'un film avec le site www.themoviedb.org */
+function callAPIsearch(name, callback2) {
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://api.themoviedb.org/3/search/movie?include_adult=false&page=1&query=" + name + "&language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
+        "method": "GET",
+        "headers": {},
+        "data": "{}"
+    }
+
+    $.ajax(settings).done(response => {
+        callback2(response);
+    });
+
+}
+function creerOneCardForAdd(monObjet, film) {
+    var divCards = document.getElementById("ListCard");
+    // Création des différants elléments
+    var divCard = document.createElement("div");
+    divCard.className = "card";
+    divCard.id = "n_" + monObjet.id;
+    divCard.addEventListener('click', function () {
+        var bool = confirm("Voulez vous ajouter ce film a votre filmotèque ?")
+        if (bool) {
+            saveFilm(film);
+            dropAll();
+            afficheAllNew()
+            dropFormAddFilm();
+            alert("Film ajoutée avec succé!")
+        }
+    });
+    var divImage = document.createElement("div");
+    divImage.className = "image";
+    var img = document.createElement("img");
+    img.src = monObjet.affiche;
+    var divContent = document.createElement("div");
+    divContent.className = "content";
+    var divHeader = document.createElement("div");
+    divHeader.className = "header";
+    divHeader.innerText = monObjet.titre;
+    var divMeta = document.createElement("div");
+    divMeta.className = "meta";
+    var divDescription = document.createElement("div");
+    divDescription.className = "description";
+    divDescription.innerText = monObjet.description.slice(0, 150) + " ...";
+    var divExtraContent = document.createElement("div");
+    divExtraContent.className = "extra content";
+    var spanFloated = document.createElement("span");
+    spanFloated.className = "right floated"
+    spanFloated.innerText = "Sortie en " + monObjet.annee;
+
+    // Ajout des elléments dans la pages HTML
+    divCards.appendChild(divCard);
+    divCard.appendChild(divImage);
+    divImage.appendChild(img);
+    divCard.appendChild(divContent);
+    divContent.appendChild(divHeader);
+    divContent.appendChild(divMeta);
+    divContent.appendChild(divDescription);
+    divCard.appendChild(divExtraContent);
+    divExtraContent.appendChild(spanFloated);
+}
+function afficheAllNew() {
+    for (var i = 0; i < idUnique - 1; i++) {
+        if (arrayTab[i]) {
+            creerCard(arrayTab[i]);
+        }
+    }
+    creerOneCard(arrayTab[idUnique-1])
 }
