@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Remove HTML Table Selected Row</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="semantic/semantic.min.css">
+</head>
+
+<body>
+    <header>
+        <div class="ui violet huge three item inverted menu">
+            <a id="titre" class="item" onclick="trieParTitre()">Titre</a>
+            <a id="annee" class="item" onclick="trieParAnnee()">Annee</a>
+            <a class="item" onclick="createFormAddFilm()">Ajouter un film</a>
+        </div>
+    </header>
+    <main id="main">
+        </br></br>
+        <div class="ui center aligned column grid">
+            <div class="row">
+                <div  id="add" class="column">
+                    
+                        <!-- Ici sera le formulaire d'ajout-->
+                    
+                </div>
+            </div>
+        </div>
+        </br>
+        <div class="ui column">
+            <div class="ui link centered cards" id="ListCard">
+                <!-- Ici soront les cards des films-->
+            </div>
+        </div>
+    </main>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="semantic/semantic.min.js"></script>
+    <script src="code.js"></script>
+</body>
+
+</html>
