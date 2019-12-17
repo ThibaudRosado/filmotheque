@@ -102,8 +102,7 @@ function addFilm(titre) {
 function saveFilm(film) {
     idUnique++;
     arrayTab.push({ id: idUnique, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview });
-    dropAll();
-    afficheAll();
+    creerOneCard(arrayTab[arrayTab.length-1]);
 }
 /**Creer un formulaire d'ajout d'un film */
 function createFormAddFilm() {
@@ -170,12 +169,9 @@ function creerOneCard(monObjet) {
     divHeader.innerText = monObjet.titre;
     var divMeta = document.createElement("div");
     divMeta.className = "meta";
-    //divMeta.innerText = "Real : " + monObjet.realisateur + " - Sortie en " + monObjet.annee;
-    //divMeta.innerText = "Real : " + monObjet.realisateur;
     var divDescription = document.createElement("div");
     divDescription.className = "description";
     divDescription.innerText = monObjet.description.slice(0, 150) + " ...";
-
     var divExtraContent = document.createElement("div");
     divExtraContent.className = "extra content";
     var spanFloated = document.createElement("span");
@@ -183,34 +179,16 @@ function creerOneCard(monObjet) {
     spanFloated.innerText = "Sortie en " + monObjet.annee;
 
     // Ajout des elléments dans la pages HTML
-    if (elementDeReference.childNodes.length > 0) {
-        var collNoeuds = elementDeReference.childNodes;
-        divCards.insertBefore(divCard, collNoeuds[0]);
-
-        divCard.appendChild(divImage);
-        divImage.appendChild(img);
-        divCard.appendChild(divContent);
-        divContent.appendChild(divHeader);
-        divContent.appendChild(divMeta);
-        divContent.appendChild(divDescription);
-        divCard.appendChild(divExtraContent);
-        divExtraContent.appendChild(spanFloated);
-
-    } else {
-
-        divCards.appendChild(divCard);
-        divCard.appendChild(divImage);
-        divImage.appendChild(img);
-        divCard.appendChild(divContent);
-        divContent.appendChild(divHeader);
-        divContent.appendChild(divMeta);
-        divContent.appendChild(divDescription);
-        divCard.appendChild(divExtraContent);
-        divExtraContent.appendChild(spanFloated);
-    }
-
-
-
+    var collNoeuds = divCards.childNodes;
+    divCards.insertBefore(divCard, collNoeuds[0]);
+    divCard.appendChild(divImage);
+    divImage.appendChild(img);
+    divCard.appendChild(divContent);
+    divContent.appendChild(divHeader);
+    divContent.appendChild(divMeta);
+    divContent.appendChild(divDescription);
+    divCard.appendChild(divExtraContent);
+    divExtraContent.appendChild(spanFloated);
 }
 /** Ajoute un jeu de film test suplémentaire*/
 function addPleinDeFilm() {
