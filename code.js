@@ -65,7 +65,7 @@ function creerCard(monObjet) {
     var spanFloated = document.createElement("span");
     spanFloated.className = "right floated"
     spanFloated.innerText = "Sortie en " + monObjet.annee;
-    
+
     // Ajout des elléments dans la pages HTML
     divCards.appendChild(divCard);
     divCard.appendChild(divImage);
@@ -151,9 +151,70 @@ function dropFormAddFilm() {
     document.getElementById("form").remove();
     variableAddFilm = 0;
 }
+/** Permet de créer une bouvelle card qui s'affiche en première */
+function creerOneCard(monObjet) {
+    var divCards = document.getElementById("ListCard");
+    // Création des différants elléments
+    var divCard = document.createElement("div");
+    divCard.className = "card";
+    divCard.id = "n_" + monObjet.id;
+    divCard.addEventListener('click', function () { dropOne(monObjet.id); });
+    var divImage = document.createElement("div");
+    divImage.className = "image";
+    var img = document.createElement("img");
+    img.src = monObjet.affiche;
+    var divContent = document.createElement("div");
+    divContent.className = "content";
+    var divHeader = document.createElement("div");
+    divHeader.className = "header";
+    divHeader.innerText = monObjet.titre;
+    var divMeta = document.createElement("div");
+    divMeta.className = "meta";
+    //divMeta.innerText = "Real : " + monObjet.realisateur + " - Sortie en " + monObjet.annee;
+    //divMeta.innerText = "Real : " + monObjet.realisateur;
+    var divDescription = document.createElement("div");
+    divDescription.className = "description";
+    divDescription.innerText = monObjet.description.slice(0, 150) + " ...";
+
+    var divExtraContent = document.createElement("div");
+    divExtraContent.className = "extra content";
+    var spanFloated = document.createElement("span");
+    spanFloated.className = "right floated"
+    spanFloated.innerText = "Sortie en " + monObjet.annee;
+
+    // Ajout des elléments dans la pages HTML
+    if (elementDeReference.childNodes.length > 0) {
+        var collNoeuds = elementDeReference.childNodes;
+        divCards.insertBefore(divCard, collNoeuds[0]);
+
+        divCard.appendChild(divImage);
+        divImage.appendChild(img);
+        divCard.appendChild(divContent);
+        divContent.appendChild(divHeader);
+        divContent.appendChild(divMeta);
+        divContent.appendChild(divDescription);
+        divCard.appendChild(divExtraContent);
+        divExtraContent.appendChild(spanFloated);
+
+    } else {
+
+        divCards.appendChild(divCard);
+        divCard.appendChild(divImage);
+        divImage.appendChild(img);
+        divCard.appendChild(divContent);
+        divContent.appendChild(divHeader);
+        divContent.appendChild(divMeta);
+        divContent.appendChild(divDescription);
+        divCard.appendChild(divExtraContent);
+        divExtraContent.appendChild(spanFloated);
+    }
+
+
+
+}
 /** Ajoute un jeu de film test suplémentaire*/
 function addPleinDeFilm() {
-   addFilm('Jumanji : next level');
+    addFilm('Jumanji : next level');
     addFilm('Rambo: Last Blood');
     addFilm('The Irishman');
     addFilm('Joker');
