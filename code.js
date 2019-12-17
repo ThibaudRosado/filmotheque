@@ -131,7 +131,9 @@ function createFormAddFilm() {
         btnAdd.innerText = "Rechercher";
         btnAdd.addEventListener('click', function () {
             if (input.value.length > 1) {
+                dropAll();
                 btnFilmSearch(input.value);
+                creerBtnTrie();
                 //alert("Film ajoutée avec success");
                 //dropFormAddFilm();
             } else {
@@ -145,6 +147,7 @@ function createFormAddFilm() {
         btnAnnuler.addEventListener('click', function () {
             dropFormAddFilm();
             afficheAll();
+            creerBtnTrie();
         });
         main.appendChild(divInput);
         divInput.appendChild(input);
@@ -339,6 +342,11 @@ function rechercherFilm() {
     createFormAddFilm();
     dropAll();
     supprimerFleche();
+    
+    let titre = document.getElementById("titre");
+    let annee = document.getElementById("annee");
+    titre.remove();
+    annee.remove();
 }
 function btnFilmSearch(titre) {
     callAPIsearch(titre, listSearch);
@@ -380,9 +388,9 @@ function creerOneCardForAdd(monObjet, film) {
         if (bool) {
             saveFilm(film);
             dropAll();
-            afficheAllNew()
+            afficheAllNew();
             dropFormAddFilm();
-            alert("Film ajoutée avec succé!")
+            alert("Film ajoutée avec succé!");
         }
     });
     var divImage = document.createElement("div");
@@ -423,4 +431,22 @@ function afficheAllNew() {
         }
     }
     creerOneCard(arrayTab[idUnique-1])
+}
+function creerBtnTrie(){
+    let titre = document.createElement("a");
+    titre.id="titre"
+    titre.className="item"
+    titre.onclick=trieParTitre
+    titre.innerHTML="Titre"
+
+    let annee = document.createElement("a")
+    annee.id="annee"
+    annee.className="item"
+    annee.onclick=trieParAnnee
+    annee.innerHTML="Année"
+
+    let nav = document.getElementById("nav")
+    var collNoeuds = nav.childNodes;
+    nav.insertBefore(annee, collNoeuds[0]);
+    nav.insertBefore(titre, annee);
 }
