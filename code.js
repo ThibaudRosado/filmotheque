@@ -27,6 +27,12 @@ function dropAll() {
             aSupprimer.remove();
         }
     }
+    for (var i = 0; i < idSearch + 1; i++) {
+        if (document.getElementById("n_" + i)) {
+            var aSupprimer = document.getElementById("n_" + i);
+            aSupprimer.remove();
+        }
+    }
 }
 /** Permet d'afficher tout les films */
 function afficheAll() {
