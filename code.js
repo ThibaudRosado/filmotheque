@@ -143,6 +143,7 @@ function createFormAddFilm() {
         btnAnnuler.innerText = "Annuler";
         btnAnnuler.addEventListener('click', function () {
             dropFormAddFilm();
+            dropAll();
             afficheAll();
             creerBtnTrie();
         });
@@ -339,7 +340,7 @@ function rechercherFilm() {
     createFormAddFilm();
     dropAll();
     supprimerFleche();
-    
+
     let titre = document.getElementById("titre");
     let annee = document.getElementById("annee");
     titre.remove();
@@ -350,13 +351,15 @@ function btnFilmSearch(titre) {
 }
 function listSearch(rep) {
     let i = 0;
-    while (i < rep.results.length) {
-        idSearch++;
-        film = rep.results[i];
-        objetSearch = { id: idSearch, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview }
-        creerOneCardForAdd(objetSearch, film);
-        i++;
-    }
+    if (rep.results.length != 0) {
+        while (i < rep.results.length) {
+            idSearch++;
+            film = rep.results[i];
+            objetSearch = { id: idSearch, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview }
+            creerOneCardForAdd(objetSearch, film);
+            i++;
+        }
+    } else { alert("Pas de résultat pour cette recherche.") }
 }
 /** Permet de récupérer les informations d'un film avec le site www.themoviedb.org */
 function callAPIsearch(name, callback2) {
@@ -429,20 +432,20 @@ function afficheAllNew() {
             creerCard(arrayTab[i]);
         }
     }
-    creerOneCard(arrayTab[idUnique-1])
+    creerOneCard(arrayTab[idUnique - 1])
 }
-function creerBtnTrie(){
+function creerBtnTrie() {
     let titre = document.createElement("a");
-    titre.id="titre"
-    titre.className="item"
-    titre.onclick=trieParTitre
-    titre.innerHTML="Titre"
+    titre.id = "titre"
+    titre.className = "item"
+    titre.onclick = trieParTitre
+    titre.innerHTML = "Titre"
 
     let annee = document.createElement("a")
-    annee.id="annee"
-    annee.className="item"
-    annee.onclick=trieParAnnee
-    annee.innerHTML="Année"
+    annee.id = "annee"
+    annee.className = "item"
+    annee.onclick = trieParAnnee
+    annee.innerHTML = "Année"
 
     let nav = document.getElementById("nav")
     var collNoeuds = nav.childNodes;
