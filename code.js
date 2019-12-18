@@ -390,6 +390,7 @@ function creerOneCardForAdd(monObjet, film) {
             dropAll();
             afficheAllNew();
             dropFormAddFilm();
+            window.scroll(0, 0);
             alert("Film ajoutée avec succé!");
         }
     });
