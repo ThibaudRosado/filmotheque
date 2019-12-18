@@ -133,9 +133,6 @@ function createFormAddFilm() {
             if (input.value.length > 1) {
                 dropAll();
                 btnFilmSearch(input.value);
-                creerBtnTrie();
-                //alert("Film ajoutée avec success");
-                //dropFormAddFilm();
             } else {
                 alert("Un titre doit au moins avoir 2 lettres");
             }
@@ -391,6 +388,7 @@ function creerOneCardForAdd(monObjet, film) {
             afficheAllNew();
             dropFormAddFilm();
             window.scroll(0, 0);
+            creerBtnTrie();
             alert("Film ajoutée avec succé!");
         }
     });
