@@ -412,18 +412,23 @@ function getVideo(idTMDB, callbackVideo) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "https://api.themoviedb.org/3/movie/"+idTMDB+"/videos?language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
+        "url": "https://api.themoviedb.org/3/movie/" + idTMDB + "/videos?language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
         "method": "GET",
         "headers": {},
         "data": "{}"
     }
 
     $.ajax(settings).done(function (response) {
-        callbackVideo("https://www.youtube.com/embed/"+response.results[0].key);
+        try {
+            callbackVideo("https://www.youtube.com/embed/" + response.results[0].key);
+
+        } catch (exeption) {
+            alert("Pas de video disponible pour le moment.");
+        }
     });
 }
 /**Ouvre un ouvel onglet avec une vidéo de présentation du film */
-function vidInNewWindow(url){
+function vidInNewWindow(url) {
     window.open(url);
 }
 
