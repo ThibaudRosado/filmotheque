@@ -43,12 +43,12 @@ function showAllCard() {
 }
 /** Permet d'afficher tout les films en mettant le dernier éléments qui a été ajouté en évidance */
 function showAllCardWithNewFirst() {
-    for (var i = 0; i < idUnique - 1; i++) {
+    for (var i = 0; i < arrayTab.length - 1; i++) {
         if (arrayTab[i]) {
             creerCard(arrayTab[i]);
         }
     }
-    creerCardFirstPos(arrayTab[idUnique - 1])
+    creerCardFirstPos(arrayTab[arrayTab.length - 1])
 }
 /** Permet d'afficher tout les résultats de la recherche */
 function showAllCardSearch(rep) {
