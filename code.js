@@ -169,7 +169,7 @@ function callAPIsearch(name, callback2) {
 /** Sauvegarde un film dans l'array */
 function saveMovie(film) {
     idUnique++;
-    arrayTab.push({ id: idUnique, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview });
+    arrayTab.push({ id: idUnique, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview, idTMDB: film.id });
     creerCardFirstPos(arrayTab[arrayTab.length - 1]);
 }
 /** Permet de créer une card qui s'affiche en première */
@@ -179,9 +179,9 @@ function creerCardFirstPos(monObjet) {
     var divCard = document.createElement("div");
     divCard.className = "card";
     divCard.id = "n_" + monObjet.id;
-    divCard.addEventListener('click', function () { dropOneCard(monObjet.id); });
     var divImage = document.createElement("div");
     divImage.className = "image";
+    divImage.addEventListener('click', function () { getVideo(monObjet.idTMDB, vidInNewWindow); });
     var img = document.createElement("img");
     img.src = monObjet.affiche;
     var divContent = document.createElement("div");
@@ -199,6 +199,9 @@ function creerCardFirstPos(monObjet) {
     var spanFloated = document.createElement("span");
     spanFloated.className = "right floated"
     spanFloated.innerText = "Sortie en " + monObjet.annee;
+    var trash = document.createElement("i");
+    trash.className = "trash alternate outline icon"
+    trash.addEventListener('click', function () { dropOneCard(monObjet.id); });
 
     // Ajout des elléments dans la pages HTML
     var collNoeuds = divCards.childNodes;
@@ -210,6 +213,7 @@ function creerCardFirstPos(monObjet) {
     divContent.appendChild(divMeta);
     divContent.appendChild(divDescription);
     divCard.appendChild(divExtraContent);
+    divExtraContent.appendChild(trash);
     divExtraContent.appendChild(spanFloated);
 }
 /** Permet de créer une card qui s'enregistre quand on click dessus */
@@ -269,11 +273,11 @@ function creerCard(monObjet) {
     var divCard = document.createElement("div");
     divCard.className = "card";
     divCard.id = "n_" + monObjet.id;
-    divCard.addEventListener('click', function () { dropOneCard(monObjet.id); });
     var divImage = document.createElement("div");
     divImage.className = "image";
     var img = document.createElement("img");
     img.src = monObjet.affiche;
+    divImage.addEventListener('click', function () { getVideo(monObjet.idTMDB, vidInNewWindow); });
     var divContent = document.createElement("div");
     divContent.className = "content";
     var divHeader = document.createElement("div");
@@ -291,6 +295,10 @@ function creerCard(monObjet) {
     spanFloated.className = "right floated"
     spanFloated.innerText = "Sortie en " + monObjet.annee;
 
+    var trash = document.createElement("i");
+    trash.className = "trash alternate outline icon"
+    trash.addEventListener('click', function () { dropOneCard(monObjet.id); });
+
     // Ajout des elléments dans la pages HTML
     divCards.appendChild(divCard);
     divCard.appendChild(divImage);
@@ -300,6 +308,7 @@ function creerCard(monObjet) {
     divContent.appendChild(divMeta);
     divContent.appendChild(divDescription);
     divCard.appendChild(divExtraContent);
+    divExtraContent.appendChild(trash);
     divExtraContent.appendChild(spanFloated);
 }
 /**Trie par titre */
@@ -398,9 +407,29 @@ function supprimerFleche() {
         document.getElementById("caret").remove();
     }
 }
+/**Permet de récupérer une vidéo en fonction de l'id du film TMDB */
+function getVideo(idTMDB, callbackVideo) {
+    var settings = {
+        "async": true,
+        "crossDomain": true,
+        "url": "https://api.themoviedb.org/3/movie/"+idTMDB+"/videos?language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
+        "method": "GET",
+        "headers": {},
+        "data": "{}"
+    }
+
+    $.ajax(settings).done(function (response) {
+        callbackVideo("https://www.youtube.com/embed/"+response.results[0].key);
+    });
+}
+/**Ouvre un ouvel onglet avec une vidéo de présentation du film */
+function vidInNewWindow(url){
+    window.open(url);
+}
+
+
 
 //Portion d'initialisation de la page
-addPleinDeFilm();
 /** Ajoute un jeu de film test*/
 function addPleinDeFilm() {
     callAPI('Jumanji : next level', saveMovie);
@@ -441,3 +470,4 @@ function callAPI(name, callback) {
     });
 
 }
+addPleinDeFilm();
