@@ -35,10 +35,8 @@ function dropAllCard() {
 }
 /** Permet d'afficher tout les films */
 function showAllCard() {
-    for (var i = 0; i < idUnique + 1; i++) {
-        if (arrayTab[i]) {
-            creerCard(arrayTab[i]);
-        }
+    for (var i = 0; i < arrayTab.length; i++) {
+        creerCard(arrayTab[i]);
     }
 }
 /** Permet d'afficher tout les films en mettant le dernier éléments qui a été ajouté en évidance */
