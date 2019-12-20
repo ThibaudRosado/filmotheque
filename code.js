@@ -1,9 +1,7 @@
 var arrayTab = new Array();
-var idUnique = 0;
 var idSearch = 0;
 var trieAnnee = 0;
 var trieTitre = 0;
-
 
 /**Permet de supprimer un film et son affichage */
 function dropOneCard(id) {
@@ -24,44 +22,42 @@ function dropAllCard() {
 }
 /** Permet d'afficher tout les films */
 function showAllCard(newCard) {
-    for (var i = 0; i < arrayTab.length ; i++) {
+    for (let i = 0; i < arrayTab.length; i++) {
         if (arrayTab[i]) {
-            var divCards = document.getElementById("ListCard");
+            let divCards = document.getElementById("ListCard");
             // Création des différants elléments
-            var divCard = document.createElement("div");
+            let divCard = document.createElement("div");
             divCard.className = "card";
             divCard.id = "n_" + arrayTab[i].id;
-            var divImage = document.createElement("div");
+            let divImage = document.createElement("div");
             divImage.className = "image";
-            var img = document.createElement("img");
-            img.src = arrayTab[i].affiche;
-            divImage.addEventListener('click', function () { getVideo(arrayTab[i].idTMDB, vidInNewWindow); });
-            var divContent = document.createElement("div");
+            let img = document.createElement("img");
+            img.src = arrayTab[i].affiche; 
+            divImage.addEventListener('click', function () { getVideo(arrayTab[i].id, vidInNewWindow); });
+            let divContent = document.createElement("div");
             divContent.className = "content";
-            var divHeader = document.createElement("div");
+            let divHeader = document.createElement("div");
             divHeader.className = "header";
             divHeader.innerText = arrayTab[i].titre;
-            var divMeta = document.createElement("div");
+            let divMeta = document.createElement("div");
             divMeta.className = "meta";
-            var divDescription = document.createElement("div");
+            let divDescription = document.createElement("div");
             divDescription.className = "description";
             divDescription.innerText = arrayTab[i].description.slice(0, 150) + " ...";
-
-            var divExtraContent = document.createElement("div");
+            let divExtraContent = document.createElement("div");
             divExtraContent.className = "extra content";
-            var spanFloated = document.createElement("span");
+            let spanFloated = document.createElement("span");
             spanFloated.className = "right floated"
             spanFloated.innerText = "Sortie en " + arrayTab[i].annee;
-
-            var trash = document.createElement("i");
+            let trash = document.createElement("i");
             trash.className = "trash alternate outline icon"
             trash.addEventListener('click', function () { dropOneCard(arrayTab[i].id); });
 
             // Ajout des elléments dans la pages HTML
-            if(newCard){
-                var collNoeuds = divCards.childNodes;
+            let collNoeuds = divCards.childNodes;
+            if (newCard) {
                 divCards.insertBefore(divCard, collNoeuds[0]);
-            }else{
+            } else {
                 divCards.appendChild(divCard);
             }
             divCard.appendChild(divImage);
@@ -75,6 +71,52 @@ function showAllCard(newCard) {
             divExtraContent.appendChild(spanFloated);
         }
     }
+}
+
+function createOneCard(video){
+    var divCards = document.getElementById("ListCard");
+    // Création des différants elléments
+    var divCard = document.createElement("div");
+    divCard.className = "card";
+    divCard.id = "n_" + video.id;
+    var divImage = document.createElement("div");
+    divImage.className = "image";
+    var img = document.createElement("img");
+    img.src = video.affiche; 
+    divImage.addEventListener('click', function () { getVideo(video.id, vidInNewWindow); });
+    var divContent = document.createElement("div");
+    divContent.className = "content";
+    var divHeader = document.createElement("div");
+    divHeader.className = "header";
+    divHeader.innerText = video.titre;
+    var divMeta = document.createElement("div");
+    divMeta.className = "meta";
+    var divDescription = document.createElement("div");
+    divDescription.className = "description";
+    divDescription.innerText = video.description.slice(0, 150) + " ...";
+
+    var divExtraContent = document.createElement("div");
+    divExtraContent.className = "extra content";
+    var spanFloated = document.createElement("span");
+    spanFloated.className = "right floated"
+    spanFloated.innerText = "Sortie en " + video.annee;
+
+    var trash = document.createElement("i");
+    trash.className = "trash alternate outline icon"
+    trash.addEventListener('click', function () { dropOneCard(video.id); });
+
+    // Ajout des elléments dans la pages HTML
+    var collNoeuds = divCards.childNodes;
+    divCards.insertBefore(divCard, collNoeuds[0]);
+    divCard.appendChild(divImage);
+    divImage.appendChild(img);
+    divCard.appendChild(divContent);
+    divContent.appendChild(divHeader);
+    divContent.appendChild(divMeta);
+    divContent.appendChild(divDescription);
+    divCard.appendChild(divExtraContent);
+    divExtraContent.appendChild(trash);
+    divExtraContent.appendChild(spanFloated);
 }
 /** Permet d'afficher tout les résultats de la recherche */
 function showAllCardSearch(rep) {
@@ -194,10 +236,8 @@ function callAPIsearch(name, callback2) {
 }
 /** Sauvegarde un film dans l'array */
 function saveMovie(film) {
-    idUnique++;
-    arrayTab.push({ id: idUnique, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview, idTMDB: film.id });
-    dropAllCard();
-    showAllCard(true);
+    arrayTab.push({id: film.id, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview});
+    createOneCard(arrayTab[arrayTab.length-1])
 }
 /** Permet de créer une card qui s'enregistre quand on click dessus */
 function creerCardForSearch(monObjet, film) {
@@ -346,11 +386,11 @@ function supprimerFleche() {
     }
 }
 /**Permet de récupérer une vidéo en fonction de l'id du film TMDB */
-function getVideo(idTMDB, callbackVideo) {
+function getVideo(id, callbackVideo) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "https://api.themoviedb.org/3/movie/" + idTMDB + "/videos?language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
+        "url": "https://api.themoviedb.org/3/movie/" + id + "/videos?language=fr-FR&api_key=9fc903c4778210ab5888655b84ac25d3",
         "method": "GET",
         "headers": {},
         "data": "{}"
@@ -369,7 +409,6 @@ function getVideo(idTMDB, callbackVideo) {
 function vidInNewWindow(url) {
     window.open(url);
 }
-
 
 
 //Portion d'initialisation de la page
