@@ -438,3 +438,6 @@ function callAPI(name, callback) {
 
 }
 addPleinDeFilm();
+document.getElementById("titre").onclick= trieParTitre;
+document.getElementById("annee").onclick= trieParAnnee;
+document.getElementById("search").onclick= menuSearchMovie;
