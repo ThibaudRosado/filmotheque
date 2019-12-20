@@ -20,33 +20,61 @@ function dropOneCard(id) {
 }
 /**Permet de supprimer l'affichage toute les cards */
 function dropAllCard() {
-    for (var i = 0; i < idUnique + 1; i++) {
-        if (document.getElementById("n_" + i)) {
-            var aSupprimer = document.getElementById("n_" + i);
-            aSupprimer.remove();
-        }
-    }
-    for (var i = 0; i < idSearch + 1; i++) {
-        if (document.getElementById("n_" + i)) {
-            var aSupprimer = document.getElementById("n_" + i);
-            aSupprimer.remove();
-        }
-    }
+    document.getElementById("ListCard").innerHTML = "";
 }
 /** Permet d'afficher tout les films */
-function showAllCard() {
-    for (var i = 0; i < arrayTab.length; i++) {
-        creerCard(arrayTab[i]);
-    }
-}
-/** Permet d'afficher tout les films en mettant le dernier éléments qui a été ajouté en évidance */
-function showAllCardWithNewFirst() {
-    for (var i = 0; i < arrayTab.length - 1; i++) {
+function showAllCard(newCard) {
+    for (var i = 0; i < arrayTab.length ; i++) {
         if (arrayTab[i]) {
-            creerCard(arrayTab[i]);
+            var divCards = document.getElementById("ListCard");
+            // Création des différants elléments
+            var divCard = document.createElement("div");
+            divCard.className = "card";
+            divCard.id = "n_" + arrayTab[i].id;
+            var divImage = document.createElement("div");
+            divImage.className = "image";
+            var img = document.createElement("img");
+            img.src = arrayTab[i].affiche;
+            divImage.addEventListener('click', function () { getVideo(arrayTab[i].idTMDB, vidInNewWindow); });
+            var divContent = document.createElement("div");
+            divContent.className = "content";
+            var divHeader = document.createElement("div");
+            divHeader.className = "header";
+            divHeader.innerText = arrayTab[i].titre;
+            var divMeta = document.createElement("div");
+            divMeta.className = "meta";
+            var divDescription = document.createElement("div");
+            divDescription.className = "description";
+            divDescription.innerText = arrayTab[i].description.slice(0, 150) + " ...";
+
+            var divExtraContent = document.createElement("div");
+            divExtraContent.className = "extra content";
+            var spanFloated = document.createElement("span");
+            spanFloated.className = "right floated"
+            spanFloated.innerText = "Sortie en " + arrayTab[i].annee;
+
+            var trash = document.createElement("i");
+            trash.className = "trash alternate outline icon"
+            trash.addEventListener('click', function () { dropOneCard(arrayTab[i].id); });
+
+            // Ajout des elléments dans la pages HTML
+            if(newCard){
+                var collNoeuds = divCards.childNodes;
+                divCards.insertBefore(divCard, collNoeuds[0]);
+            }else{
+                divCards.appendChild(divCard);
+            }
+            divCard.appendChild(divImage);
+            divImage.appendChild(img);
+            divCard.appendChild(divContent);
+            divContent.appendChild(divHeader);
+            divContent.appendChild(divMeta);
+            divContent.appendChild(divDescription);
+            divCard.appendChild(divExtraContent);
+            divExtraContent.appendChild(trash);
+            divExtraContent.appendChild(spanFloated);
         }
     }
-    creerCardFirstPos(arrayTab[arrayTab.length - 1])
 }
 /** Permet d'afficher tout les résultats de la recherche */
 function showAllCardSearch(rep) {
@@ -94,7 +122,7 @@ function createFormAddFilm() {
     btnAnnuler.addEventListener('click', function () {
         dropFormAddMovie();
         dropAllCard();
-        showAllCard();
+        showAllCard(false);
         resetMenu();
     });
     //On les relis a notre page html
@@ -168,51 +196,8 @@ function callAPIsearch(name, callback2) {
 function saveMovie(film) {
     idUnique++;
     arrayTab.push({ id: idUnique, titre: film.title, annee: parseInt(film.release_date.slice(0, 4), 10), realisateur: "", affiche: "https://image.tmdb.org/t/p/w600_and_h900_bestv2" + film.poster_path, description: film.overview, idTMDB: film.id });
-    creerCardFirstPos(arrayTab[arrayTab.length - 1]);
-}
-/** Permet de créer une card qui s'affiche en première */
-function creerCardFirstPos(monObjet) {
-    var divCards = document.getElementById("ListCard");
-    // Création des différants elléments
-    var divCard = document.createElement("div");
-    divCard.className = "card";
-    divCard.id = "n_" + monObjet.id;
-    var divImage = document.createElement("div");
-    divImage.className = "image";
-    divImage.addEventListener('click', function () { getVideo(monObjet.idTMDB, vidInNewWindow); });
-    var img = document.createElement("img");
-    img.src = monObjet.affiche;
-    var divContent = document.createElement("div");
-    divContent.className = "content";
-    var divHeader = document.createElement("div");
-    divHeader.className = "header";
-    divHeader.innerText = monObjet.titre;
-    var divMeta = document.createElement("div");
-    divMeta.className = "meta";
-    var divDescription = document.createElement("div");
-    divDescription.className = "description";
-    divDescription.innerText = monObjet.description.slice(0, 150) + " ...";
-    var divExtraContent = document.createElement("div");
-    divExtraContent.className = "extra content";
-    var spanFloated = document.createElement("span");
-    spanFloated.className = "right floated"
-    spanFloated.innerText = "Sortie en " + monObjet.annee;
-    var trash = document.createElement("i");
-    trash.className = "trash alternate outline icon"
-    trash.addEventListener('click', function () { dropOneCard(monObjet.id); });
-
-    // Ajout des elléments dans la pages HTML
-    var collNoeuds = divCards.childNodes;
-    divCards.insertBefore(divCard, collNoeuds[0]);
-    divCard.appendChild(divImage);
-    divImage.appendChild(img);
-    divCard.appendChild(divContent);
-    divContent.appendChild(divHeader);
-    divContent.appendChild(divMeta);
-    divContent.appendChild(divDescription);
-    divCard.appendChild(divExtraContent);
-    divExtraContent.appendChild(trash);
-    divExtraContent.appendChild(spanFloated);
+    dropAllCard();
+    showAllCard(true);
 }
 /** Permet de créer une card qui s'enregistre quand on click dessus */
 function creerCardForSearch(monObjet, film) {
@@ -226,7 +211,7 @@ function creerCardForSearch(monObjet, film) {
         if (bool) {
             saveMovie(film);
             dropAllCard();
-            showAllCardWithNewFirst();
+            showAllCard(true);
             dropFormAddMovie();
             window.scroll(0, 0);
             resetMenu();
@@ -264,51 +249,6 @@ function creerCardForSearch(monObjet, film) {
     divCard.appendChild(divExtraContent);
     divExtraContent.appendChild(spanFloated);
 }
-/** Permet de créer une card qui se supprime quand on click dessus */
-function creerCard(monObjet) {
-    var divCards = document.getElementById("ListCard");
-    // Création des différants elléments
-    var divCard = document.createElement("div");
-    divCard.className = "card";
-    divCard.id = "n_" + monObjet.id;
-    var divImage = document.createElement("div");
-    divImage.className = "image";
-    var img = document.createElement("img");
-    img.src = monObjet.affiche;
-    divImage.addEventListener('click', function () { getVideo(monObjet.idTMDB, vidInNewWindow); });
-    var divContent = document.createElement("div");
-    divContent.className = "content";
-    var divHeader = document.createElement("div");
-    divHeader.className = "header";
-    divHeader.innerText = monObjet.titre;
-    var divMeta = document.createElement("div");
-    divMeta.className = "meta";
-    var divDescription = document.createElement("div");
-    divDescription.className = "description";
-    divDescription.innerText = monObjet.description.slice(0, 150) + " ...";
-
-    var divExtraContent = document.createElement("div");
-    divExtraContent.className = "extra content";
-    var spanFloated = document.createElement("span");
-    spanFloated.className = "right floated"
-    spanFloated.innerText = "Sortie en " + monObjet.annee;
-
-    var trash = document.createElement("i");
-    trash.className = "trash alternate outline icon"
-    trash.addEventListener('click', function () { dropOneCard(monObjet.id); });
-
-    // Ajout des elléments dans la pages HTML
-    divCards.appendChild(divCard);
-    divCard.appendChild(divImage);
-    divImage.appendChild(img);
-    divCard.appendChild(divContent);
-    divContent.appendChild(divHeader);
-    divContent.appendChild(divMeta);
-    divContent.appendChild(divDescription);
-    divCard.appendChild(divExtraContent);
-    divExtraContent.appendChild(trash);
-    divExtraContent.appendChild(spanFloated);
-}
 /**Trie par titre */
 function trieParTitre() {
     dropAllCard();
@@ -330,7 +270,7 @@ function trieParTitre() {
         document.getElementById("titre").insertAdjacentElement('beforeend', icon);
         trieTitre = 0;
     }
-    showAllCard();
+    showAllCard(false);
 }
 /**Trie par annee */
 function trieParAnnee() {
@@ -353,7 +293,7 @@ function trieParAnnee() {
         document.getElementById("annee").insertAdjacentElement('beforeend', icon);
         trieAnnee = 0;
     }
-    showAllCard();
+    showAllCard(false);
 }
 /**Argument pour le .sort de trieParTitre() */
 function compareTitre(a, b) {
