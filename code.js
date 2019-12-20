@@ -223,7 +223,7 @@ function callAPIsearch(name, callback2) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "https://api.themoviedb.org/3/search/movie?include_adult=false&page=1&query=" + name + "&language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
+        "url": "https://api.themoviedb.org/3/search/movie?include_adult=false&page=1&query=" + name + "&language=fr-FR&api_key=9fc903c4778210ab5888655b84ac25d3",
         "method": "GET",
         "headers": {},
         "data": "{}"
@@ -339,44 +339,29 @@ function trieParAnnee() {
 function compareTitre(a, b) {
     const A = a.titre.toUpperCase();
     const B = b.titre.toUpperCase();
-    let comparison = 0;
     if (trieTitre == 0) {
-
         if (A > B) {
-            comparison = 1;
+            return 1;
         } else if (A < B) {
-            comparison = -1;
+            return -1;
         }
-        return comparison;
+        return 0;
     } else {
         if (A < B) {
-            comparison = 1;
+            return 1;
         } else if (A > B) {
-            comparison = -1;
+            return -1;
         }
-        return comparison;
+        return 0;
 
     }
 }
 /**Argument pour le .sort de trieParAnnee() */
 function compareAnnee(a, b) {
-    const A = a.annee;
-    const B = b.annee;
-    let comparison = 0;
     if (trieAnnee == 0) {
-        if (A > B) {
-            comparison = 1;
-        } else if (A < B) {
-            comparison = -1;
-        }
-        return comparison;
+        return a.annee - b.annee;
     } else {
-        if (A < B) {
-            comparison = 1;
-        } else if (A > B) {
-            comparison = -1;
-        }
-        return comparison;
+        return b.annee - a.annee;
     }
 }
 /**Permet de supprimer l'affichage de la flèche indiquant le sens de trie */
@@ -440,7 +425,7 @@ function callAPI(name, callback) {
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": "https://api.themoviedb.org/3/search/movie?include_adult=false&page=1&query=" + name + "&language=en-US&api_key=9fc903c4778210ab5888655b84ac25d3",
+        "url": "https://api.themoviedb.org/3/search/movie?include_adult=false&page=1&query=" + name + "&language=fr-FR&api_key=9fc903c4778210ab5888655b84ac25d3",
         "method": "GET",
         "headers": {},
         "data": "{}"
